@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
-//= require_tree .
+//= require jwm_header
+//= require pages
+//= require jamwithme
 
-var jwm = {};

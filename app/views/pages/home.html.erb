@@ -1,25 +1,25 @@
-<% if @show_dialog %>
-  <% content_for(:page_js) do %>
-    <%= javascript_include_tag 'authDialog' %>
-  <% end %>
-  <div id="user-dialog" hidden="true">
-    <div id="username-form" class="auth-form">
-      <%= form_for @user, remote: true do |f| %>
-        <%= f.label :username %>
-        <%= f.text_field :username %>
-        <%= f.submit 'Start Jamming' %>
-        <span>Already have one? <a href="javascript:void(0)" onClick="jwm.authDialog.showLogin()">Login</a></span>
-      <% end %>
-    </div>
-    <div id="signin-form" class="auth-form" hidden="true">
-      <%= form_for :session, remote: true do |f| %>
-        <%= f.label :username %>
-        <%= f.text_field :username %>
-        <%= f.label :password %>
-        <%= f.password_field :password %>
-        <%= f.submit 'Login' %>
-        <span><a href="javascript:void(0)" onClick="jwm.authDialog.showNewUser()">Create a username</a></span>
-      <% end %>
-    </div>
+<div id="user-dialog" hidden="true">
+  <div id="username-form" class="auth-form">
+    <%= form_for @user, remote: true do |f| %>
+      <%= f.label :username %>
+      <%= f.text_field :username %>
+      <%= f.submit 'Start Jamming' %>
+      <span>Already have one? <a href="javascript:void(0)" onClick="jwm.authDialog.showLogin()">Login</a></span>
+    <% end %>
   </div>
+  <div id="signin-form" class="auth-form" hidden="true">
+    <%= form_for :session, remote: true do |f| %>
+      <%= f.label :username %>
+      <%= f.text_field :username %>
+      <%= f.label :password %>
+      <%= f.password_field :password %>
+      <%= f.submit 'Login' %>
+      <span><a href="javascript:void(0)" onClick="jwm.authDialog.showNewUser()">Create a username</a></span>
+    <% end %>
+  </div>
+</div>
+<% unless signed_in? %>
+  <script>
+    jwm.authDialog.open('#user-dialog');
+  </script>
 <% end %>
