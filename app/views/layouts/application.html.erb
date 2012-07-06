@@ -7,7 +7,14 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-
+<header>
+  JamWithMe
+  <% if signed_in? %>
+    <div id="username">
+      <%= render 'users/menu', username: current_user.username %>
+    </div>
+  <% end %>
+</header>
 <%= yield %>
 
 </body>

@@ -1,0 +1,43 @@
+<div id="user-dialog" hidden="true">
+  <div id="username-form" class="auth-form">
+    <%= form_for @user, remote: true do |f| %>
+      <table>
+        <tr>
+          <td><%= f.label :username %></td>
+          <td><%= f.text_field :username, class: 'username-field' %></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <div class="sub-field">
+              <span>Already have one?</span>
+              <a href="javascript:void(0)" onClick="jwm.authDialog.showLogin()">Login</a>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <%= f.submit 'Start Jamming', class: 'pull-right' %>
+    <% end %>
+  </div>
+  <div id="signin-form" class="auth-form" hidden="true">
+    <%= form_for :session, url: sessions_path, remote: true do |f| %>
+      <table>
+        <tr>
+          <td><%= f.label :username %></td>
+          <td><%= f.text_field :username %></td>
+        </tr>
+        <tr>
+          <td><%= f.label :password %></td>
+          <td><%= f.password_field :password %></td>
+        </tr>
+      </table>
+      <%= f.submit 'Login' %>
+      <span><a href="javascript:void(0)" onClick="jwm.authDialog.showNewUser()">Create a username</a></span>
+    <% end %>
+  </div>
+</div>
+<% unless signed_in? %>
+  <script>
+    jwm.authDialog.open('#user-dialog');
+  </script>
+<% end %>

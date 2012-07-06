@@ -1,0 +1,7 @@
+if($('#signin-form-error').length == 0) {
+  $('#signin-form').prepend(
+    '<div id="signin-form-error"></div>'
+  );
+}
+
+$('#signin-form-error').html('Invalid username/password');

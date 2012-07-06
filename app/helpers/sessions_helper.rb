@@ -10,7 +10,6 @@ module SessionsHelper
   end
 
   def signed_in?
-    return false
     !current_user.nil?
   end
 
@@ -39,11 +38,10 @@ module SessionsHelper
 
     def user_from_remember_token
       remember_token = cookies[:remember_token]
-      User.find_by_remember_token(remember_token)
+      User.find_by(remember_token: remember_token)
     end
 
     def clear_return_to
       session.delete(:return_to)
     end
-
 end

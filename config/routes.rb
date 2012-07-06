@@ -2,6 +2,11 @@ Jamwithme::Application.routes.draw do
 
   root to: 'pages#home'
 
+  resources :users, only: [:create]
+  resources :sessions, only: [:create, :destroy]
+
+  match '/signout', to: 'sessions#destroy', via: :delete
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

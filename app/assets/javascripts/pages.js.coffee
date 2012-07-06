@@ -9,9 +9,10 @@ jwm.authDialog = (->
 		open: (selector) ->
 			$dialog = $(selector)
 				.dialog(
-					title: 'Choose a username'
+					title: 'Choose a Username'
 					modal: true
 					width: 500
+					height: 190
 					resizable: false
 					draggable: false
 				)
