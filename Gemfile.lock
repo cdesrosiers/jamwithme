@@ -111,6 +111,7 @@ GEM
     uglifier (1.2.6)
       execjs (>= 0.3.0)
       multi_json (~> 1.3)
+    xmpp4r (0.5)
 
 PLATFORMS
   ruby
@@ -125,3 +126,4 @@ DEPENDENCIES
   rails (= 3.2.3)
   sass-rails (~> 3.2.3)
   uglifier (>= 1.0.3)
+  xmpp4r
