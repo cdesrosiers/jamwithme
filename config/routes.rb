@@ -4,8 +4,10 @@ Jamwithme::Application.routes.draw do
 
   resources :users, only: [:create]
   resources :sessions, only: [:create, :destroy]
+  resources :messages, only: [:create]
 
   match '/signout', to: 'sessions#destroy', via: :delete
+  match '/pairup', to: 'users#pairup', via: :post
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

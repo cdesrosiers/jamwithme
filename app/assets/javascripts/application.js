@@ -17,3 +17,19 @@
 //= require pages
 //= require jamwithme
 
+$(document).ready(function(){
+  function debug(str){ $("#debug").append("<p>"+str+"</p>"); };
+
+  $('#echo-form').change(function() {
+    ws.send($('#echo-form').val());
+  });
+
+  $('#pairup-button').click(function() {
+    ws = new WebSocket("ws://192.168.1.3:8080/websocket");
+    ws.onmessage = function(evt) { $("#message").append("<p>"+evt.data+"</p>");};
+    ws.onclose = function() { debug("socket closed"); };
+    ws.onopen = function() {
+      debug("connected...");
+    };
+  });
+});

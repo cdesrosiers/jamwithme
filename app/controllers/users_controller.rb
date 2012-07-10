@@ -9,4 +9,7 @@ class UsersController < ApplicationController
       respond_to { |format| format.js { render 'new' } }
     end
   end
+
+  def pairup
+  end
 end
