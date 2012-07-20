@@ -6,6 +6,8 @@ Jamwithme::Application.routes.draw do
   resources :sessions, only: [:create, :destroy]
   resources :messages, only: [:create]
 
+  match '/partner', to: 'users#partner', via: :get
+  match '/signup', to: 'users#create', via: :post
   match '/signout', to: 'sessions#destroy', via: :delete
   match '/pairup', to: 'users#pairup', via: :post
 
