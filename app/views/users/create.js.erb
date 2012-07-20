@@ -5,4 +5,7 @@ if($('#username').length == 0) {
   );
 }
 
-$('#username').html('<%= escape_javascript(render 'users/menu', username: @user.username) %>');
+$('#username').html('<%= escape_javascript(@user.username) %>');
+<% if @partner %>
+  jwm.startWebSocket();
+<% end %>

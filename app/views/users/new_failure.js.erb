@@ -1,0 +1,5 @@
+if($('#username-form-error').length == 0) {
+  $('#username-form').prepend('<div id="username-form-error"></div>');
+}
+
+$('#username-form-error').html('<%= escape_javascript(@error) %>');
