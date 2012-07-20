@@ -13,7 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
-//= require jquery.svg.min.js
+//= require jquery.svg.js
 //= require jwm_header
 //= require pages
 //= require jamwithme

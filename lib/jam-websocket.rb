@@ -23,6 +23,7 @@ class JamServer
   class EventMachine::WebSocket::Connection 
     attr_accessor :partner
     attr_accessor :username
+    attr_accessor :instrument
   end
   
   def initialize
@@ -33,7 +34,7 @@ class JamServer
   end
 
   def run
-    EventMachine::WebSocket.start(:host => "192.168.1.3", :port => 8080) do |ws|
+    EventMachine::WebSocket.start(:host => "192.168.1.2", :port => 8080) do |ws|
       ws.onopen do
         remember_token = AUTH_TOKEN_REGEX.match(ws.request['cookie'])[0]
         
@@ -45,12 +46,16 @@ class JamServer
         # check for other unpartnered sockets
         partner = @partner_queue.delete_at(0)
         if partner
+          ws.instrument = 'bass'
+          ws.send("instrument: #{ws.instrument}")
           ws.send("Your new partner is #{partner.username}.")
           ws.partner = partner
           partner.partner = ws
+          partner.send("instrument: #{partner.instrument}")
           partner.send("Your new partner is #{ws.username}.")
           p "New partnership between #{ws.username} and #{partner.username}."  
         else
+          ws.instrument = 'guitar'
           ws.send('Waiting for a partner...')
           @partner_queue.push ws
           p "#{ws.username} is waiting for a partner..."

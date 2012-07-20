@@ -2,6 +2,45 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
+jwm.about = (->
+	return(
+		open: (selector) ->
+			$dialog = $(selector)
+				.dialog(
+					title: 'About'
+					modal: true
+					width: 500
+					height: 190
+					resizable: false
+					draggable: false
+				)
+			return false
+		destroy: ->
+			$dialog.dialog 'close'
+			$dialog.destroy
+	)
+)()
+  
+
+jwm.help = (->
+	return(
+		open: (selector) ->
+			$dialog = $(selector)
+				.dialog(
+					title: 'Help'
+					modal: true
+					width: 500
+					height: 190
+					resizable: false
+					draggable: false
+				)
+			return false
+		destroy: ->
+			$dialog.dialog 'close'
+			$dialog.destroy
+	)
+)()
+
 jwm.authDialog = (->
 	$dialog = {}
 

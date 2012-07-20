@@ -4,26 +4,47 @@
   <title>Jamwithme</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
-  <%= javascript_include_tag "http://localhost:9292/faye.js" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
 <header>
-  JamWithMe
+  <img src="/assets/logo.png"></img>
   <% if signed_in? %>
-    <div id="username">
-      <%= render 'users/menu', username: current_user.username %>
-    </div>
+    <div id="username"><%= current_user.username %></div>
   <% end %>
 </header>
-<%= yield %>
+<div id="panel">
+  <div id="menu">
+    <ul>
+      <li id="switch-guitar" class="bass-loader">
+        <a title="Switch to Bass Guitar">
+          <img src="/assets/bass.png" alt="Bass Guitar"></img>
+        </a>
+      </li>
+      <li id="partner-icon">
+        <a title="Find a Jam Partner">
+          <img src="/assets/partner.png" alt="Partner"></img>
+        </a>
+      </li>
+      <li id="help-icon">
+        <a title="Help">
+          <img src="/assets/help.png" alt="Help"></img>
+        </a>
+      </li>
+      <li id="about-icon">
+        <a title="About">
+          <img src="/assets/about.png" alt="About"></img>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div id="content">
+  <%= yield %>
+</div>
 <footer>
-  <div id="debug">
-    <h4>Debug</h4>
-  </div>
-  <div id="message">
-    <h4>Messages</h4>
-  </div>
+  <div id="message"></div>
+  <div id="debug"></div>
 </footer>
 </body>
 </html>

@@ -14,8 +14,12 @@ BASS_LOADED = false
 USE_GUITAR = true
 
 class InstrumentString
-  constructor: (@instrument, @audio_offset, @svg, @stringsSvg, @stringSvg) ->
-    @audio = new Audio 'AllNotes.ogg'
+  constructor: (@instrument, @audio_offset, @stringSvg, options) ->
+    @svg = options.svg
+    @stringsSvg = options.strings
+    @audioSource = options.audio
+
+    @audio = new Audio @audioSource
     
     coordinate_set = @stringSvg.getAttribute 'd'
     
@@ -118,11 +122,17 @@ class InstrumentString
 class Bass
   constructor: (@svg) ->
     strings = @svg.getElementById 'bass_strings'
+    options = {
+      svg: @svg,
+      strings: strings,
+      audio: 'BassNotes.ogg'
+    }
+
     @strings = [
-      new InstrumentString 'bass', 15, @svg, strings, @svg.getElementById 'bass_stringG'
-      new InstrumentString 'bass', 10, @svg, strings, @svg.getElementById 'bass_stringD'
-      new InstrumentString 'bass', 5,  @svg, strings, @svg.getElementById 'bass_stringA'
-      new InstrumentString 'bass', 0,  @svg, strings, @svg.getElementById 'bass_stringE'
+      new InstrumentString 'bass', 15, @svg.getElementById('bass_stringG'), options
+      new InstrumentString 'bass', 10, @svg.getElementById('bass_stringD'), options
+      new InstrumentString 'bass', 5, @svg.getElementById('bass_stringA'), options
+      new InstrumentString 'bass', 0, @svg.getElementById('bass_stringE'), options
     ]
 
   play: (key) ->
@@ -135,13 +145,18 @@ class Bass
 class Guitar
   constructor: (@svg) ->
     strings = @svg.getElementById 'guitar_strings'
+    options = {
+      svg: @svg,
+      strings: strings,
+      audio: 'AllNotes.ogg'
+    }
     @strings = [
-      new InstrumentString 'guitar', 24, @svg, strings, @svg.getElementById 'guitar_stringe'
-      new InstrumentString 'guitar', 19, @svg, strings, @svg.getElementById 'guitar_stringB'
-      new InstrumentString 'guitar', 15, @svg, strings, @svg.getElementById 'guitar_stringG'
-      new InstrumentString 'guitar', 10, @svg, strings, @svg.getElementById 'guitar_stringD'
-      new InstrumentString 'guitar', 5,  @svg, strings, @svg.getElementById 'guitar_stringA'
-      new InstrumentString 'guitar', 1,  @svg, strings, @svg.getElementById 'guitar_stringE'
+      new InstrumentString 'guitar', 24, @svg.getElementById('guitar_stringe'), options
+      new InstrumentString 'guitar', 19, @svg.getElementById('guitar_stringB'), options
+      new InstrumentString 'guitar', 15, @svg.getElementById('guitar_stringG'), options
+      new InstrumentString 'guitar', 10, @svg.getElementById('guitar_stringD'), options
+      new InstrumentString 'guitar', 5, @svg.getElementById('guitar_stringA'), options
+      new InstrumentString 'guitar', 0, @svg.getElementById('guitar_stringE'), options
     ]
 
   play: (key) ->
@@ -157,23 +172,76 @@ initApp = ->
     $("#debug").append("<p>" + str + "</p>")
     true
 
-  onBassSvgLoaded = ->
-    bass = new Bass $(this).svg('get')
+  onBassSvgLoaded = (_this) ->
+    bass = new Bass $(_this).svg('get')
     BASS = bass
+    $svg = $ $(_this).svg('get').root()
     true
 
-  loadBass = ->
+  loadBass = (callback) ->
     if $('#bass').length == 0
       $('<div id="bass"></div>').insertAfter($('#guitar'))
     $('#bass').svg {
       loadURL: '/assets/bass_prototype_2.svg'
-      onLoad: onBassSvgLoaded
+      changeSize: true
+      onLoad: ->
+        onBassSvgLoaded(this)
+        callback() if callback
     }
     BASS_LOADED = true
     true
 
+  playSessionAs = (instrument) ->
+    
+    setUpSplitScreen = ->
+      $guitarSvg = $($('div#guitar').svg('get').root())
+      $bassSvg = $($('div#bass').svg('get').root())
+      $guitar = $('g#guitar')
+      $bass = $('g#bass')
+      alert $bass.attr('style')
+      console.log $bass
+      scale = .75
+      width = $guitarSvg.width()
+      height = $guitarSvg.width()
+      if instrument == 'guitar'
+        $('#guitar').css {
+          top: 0
+          left: 0
+        }
+        $('#bass').css {
+          top: 0
+          left: '50%'
+        }
+        $('#guitar').show()
+        $('#bass').show()
+      else if instrument == 'bass'
+        $('#bass').css {
+          top: 0
+          left: 0
+        }
+        $('#guitar').css {
+          top: 0
+          left: '50%'
+        }
+        $('#bass').show()
+        $('#guitar').show()
+      $guitarSvg.attr('width', width*scale)
+      $guitarSvg.attr('height', height*scale)
+      $bassSvg.attr('width', width*scale)
+      $bassSvg.attr('height', height*scale)
+      $guitar.attr('transform',"scale(#{scale})")
+      $bass.attr('transform',"scale(#{scale})")
+
+      switch instrument
+        when 'guitar' then USE_GUITAR = true
+        when 'bass' then USE_GUITAR = false
+
+    if BASS_LOADED then setUpSplitScreen else loadBass(setUpSplitScreen)
+    true
+      
   onGuitarSvgLoaded = ->
     guitar = new Guitar $(this).svg('get')
+    $svg = $ $(this).svg('get').root()
     GUITAR = guitar
 
     onKeyPress = (e) ->
@@ -183,12 +251,17 @@ initApp = ->
 
     window.onkeydown = onKeyPress
     
-    $('#pairup-button').click ->
-      ws = new WebSocket("ws://192.168.1.3:8080/websocket")
+    jwm.startWebSocket = ->
+      console.log 'starting web socket'
+      ws = new WebSocket("ws://192.168.1.2:8080/websocket")
       ws.onmessage = (evt) ->
         $('#message').append('<p>' + evt.data + '</p>')
         if KEY_BINDINGS[evt.data]?
-          GUITAR.play evt.data
+          if USE_GUITAR then BASS.play evt.data else GUITAR.play evt.data
+        else
+          switch evt.data
+            when 'instrument: guitar' then playSessionAs 'guitar'
+            when 'instrument: bass' then playSessionAs 'bass'
         true
       ws.onclose = ->
         debug "socket closed"
@@ -200,20 +273,21 @@ initApp = ->
       GUITAR_LOADED = true
       true
 
-    $('<button id="switch-guitar" class="bass-loader">Switch to Bass</button>')
-    .insertBefore($('#pairup-button'))
+    $('#switch-guitar')
     .click ->
       switch $(this).attr('class')
         when 'bass-loader'
           loadBass() unless BASS_LOADED
           $(this).attr('class', 'guitar-loader')
-          $(this).html('Switch to Guitar')
+          $(this).find('a').attr('title', 'Switch to Guitar')
+          $(this).find('img').attr('src', '/assets/guitar.png')
           $('#guitar').hide()
           $('#bass').show()
           USE_GUITAR = false
         when 'guitar-loader'
           $(this).attr('class', 'bass-loader')
-          $(this).html('Switch to Bass')
+          $(this).find('a').attr('title', 'Switch to Bass')
+          $(this).find('img').attr('src', '/assets/bass.png')
           $('#bass').hide()
           $('#guitar').show()
           USE_GUITAR = true
@@ -222,11 +296,28 @@ initApp = ->
   loadGuitar = ->
     $('#guitar').svg {
       loadURL: '/assets/guitar_prototype_2.svg'
+      changeSize: true
       onLoad: onGuitarSvgLoaded
     }
     true
 
   loadGuitar()
+
+  $('#about-icon').click ->
+    jwm.about.open('#about')
+  
+  $('#help-icon').click ->
+    jwm.help.open('#help')
+
+  $('#partner-icon').click ->
+    console.log 'going to sign in the user'
+    # check whether the user is signed in
+    # if not sign them in, then proceed as normal
+    $.ajax({
+      url: "/partner"
+      type: "GET"
+    }).done (data) ->
+      alert data
 
   true
 
