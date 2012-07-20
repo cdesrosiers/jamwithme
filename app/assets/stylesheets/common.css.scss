@@ -1,5 +1,56 @@
-#footer {
-  bottom: 0;
+@mixin panel-background {
+  border-radius: 4px 4px 4px 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+@mixin instrument-background {
+  border-radius: 4px 4px 4px 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+div#panel {
+  width: 90px;
+  position: absolute;
+  padding-left: 10px;
+  padding-top: 10px;
+  div#menu {
+    @include panel-background;
+    padding: 10px;
+    width: 50px;
+    ul {
+      padding: 0;
+      li {
+        margin-top: 10px;
+        a {
+          cursor: pointer;
+          img {
+            width: 50px;
+          }
+        } 
+      }
+    } 
+  }
+}
+
+#content {
+  position: absolute;
+  left: 90px;
+  right: 0;
+  min-width: 800px;
+  padding: 10px;
+  div#guitar, div#bass {
+    position: absolute;
+    background-color: white;
+    @include instrument-background;
+  }
+}
+
+html {
+  background: none repeat scroll 0 0 #F2F2F2;
+}
+
+footer {
+  margin-top: 600px;
 }
 
 #debug, #message {
@@ -9,9 +60,36 @@
 }
 
 .ghost {
-  stroke-opacity: .5
+  stroke-opacity: .5;
 }
 
 .solid {
   stroke-opacity: 1
 }
+
+ul {
+  list-style: none;
+}
+
+
+body {
+  margin: 0;
+}
+
+.pull-right {
+  float: right;
+}
+
+.username-field {
+  width: 20em;
+}
+
+.sub-field {
+  span, a {
+    font-size: .8em;
+  }
+}
+
+.ui-dialog-titlebar {
+}
+
