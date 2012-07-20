@@ -9,8 +9,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.1"
-   width="744.09448"
-   height="1052.3622"
+   width="639.09003"
+   height="432"
    id="svg2">
   <svg:defs
      id="defs4">
@@ -34,6 +34,7 @@
     </rdf:RDF>
   </svg:metadata>
   <svg:g
+     transform="translate(0,-620.36189)"
      id="layer2"
      style="display:none">
     <svg:image
@@ -46,6 +47,7 @@
        style="opacity:0.6692913;display:inline" />
   </svg:g>
   <svg:g
+     transform="translate(-30.951437,-27.3596)"
      id="layer1"
      style="opacity:0.6692913;display:inline">
     <svg:path
@@ -415,9 +417,7 @@
        transform="translate(-293.72247,128.84059)"
        id="path3134-50"
        style="opacity:0.49606299;fill:none;stroke:#000000;stroke-width:1.10000002;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
-    <g
-       id="body" />
-    <g
-       id="strings" />
+    <g />
+    <g />
   </svg:g>
 </svg:svg>
